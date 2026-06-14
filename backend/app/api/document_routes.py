@@ -2,6 +2,7 @@ from datetime import datetime
 from pathlib import Path
 
 from app.api.dependencies import get_db
+from app.core.limiter import limiter
 from app.models.chunk import Chunk
 from app.models.document import Document, DocumentStatus
 from app.services.chunking import ChunkingService
@@ -39,6 +40,7 @@ def list_documents(
 
 
 @router.post("/upload")
+@limiter.limit("5/hour")
 async def upload_document(
     background_tasks: BackgroundTasks,
     request: Request,

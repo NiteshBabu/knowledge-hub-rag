@@ -13,14 +13,17 @@ python-multipart
 
 pymupdf
 
-# for local embeddings (on prod memory is ggoing out of range due to large cuda packages)
+# for local embeddings (on prod memory is going out of range due to large cuda packages)
 # sentence-transformers
 
 # use gemini embedding to reduce memory usage on deployment
 google-genai
 
-httpx
+httpxs
+slowapi
 
 python-dotenv
 
 alembic
+
+openai
