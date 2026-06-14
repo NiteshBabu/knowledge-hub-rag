@@ -9,8 +9,17 @@ class Chunk(Base):
 
     id: Mapped[int] = mapped_column(primary_key=True)
 
-    document_id: Mapped[int] = mapped_column(ForeignKey("documents.id"))
+    document_id: Mapped[int] = mapped_column(
+        ForeignKey(
+            "documents.id",
+            ondelete="CASCADE",
+        ),
+    )
 
     content: Mapped[str] = mapped_column(Text)
 
     embedding: Mapped[list[float]] = mapped_column(Vector(3072))
+    document = relationship(
+        "Document",
+        back_populates="chunks",
+    )

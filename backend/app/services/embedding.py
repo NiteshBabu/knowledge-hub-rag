@@ -1,11 +1,10 @@
-from sentence_transformers import SentenceTransformer
-
-
 class EmbeddingService:
     _model = None
 
     @classmethod
     def get_model(cls):
+        from sentence_transformers import SentenceTransformer
+
         if cls._model is None:
             cls._model = SentenceTransformer("all-MiniLM-L6-v2")
 
