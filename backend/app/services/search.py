@@ -1,5 +1,5 @@
 from app.models.chunk import Chunk
-from app.services.embedding import EmbeddingService
+from app.services.gemini_embedding import EmbeddingService
 from sqlalchemy.orm import Session
 
 

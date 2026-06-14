@@ -2,6 +2,8 @@ from sentence_transformers import SentenceTransformer
 
 
 class EmbeddingService:
+    _model = None
+
     @classmethod
     def get_model(cls):
         if cls._model is None:
@@ -14,4 +16,5 @@ class EmbeddingService:
         cls,
         text: str,
     ) -> list[float]:
-        return cls.model.encode(text).tolist()
+        model = cls.get_model()
+        return model.encode(text).tolist()

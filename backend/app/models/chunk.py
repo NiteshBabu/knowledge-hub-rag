@@ -13,4 +13,4 @@ class Chunk(Base):
 
     content: Mapped[str] = mapped_column(Text)
 
-    embedding: Mapped[list[float]] = mapped_column(Vector(384))
+    embedding: Mapped[list[float]] = mapped_column(Vector(3072))

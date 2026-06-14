@@ -2,7 +2,7 @@ from app.db.database import SessionLocal
 from app.models.chunk import Chunk
 from app.models.document import Document, DocumentStatus
 from app.services.chunking import ChunkingService
-from app.services.embedding import EmbeddingService
+from app.services.gemini_embedding import EmbeddingService
 from app.services.pdf import PDFService
 from sqlalchemy.orm import Session
 
