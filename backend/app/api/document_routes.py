@@ -4,8 +4,10 @@ from app.api.dependencies import get_db
 from app.models.chunk import Chunk
 from app.models.document import Document, DocumentStatus
 from app.services.chunking import ChunkingService
+from app.services.document_processing import DocumentProcessingService
+from app.services.embedding import EmbeddingService
 from app.services.pdf import PDFService
-from fastapi import APIRouter, Depends, File, UploadFile
+from fastapi import APIRouter, BackgroundTasks, Depends, File, UploadFile
 from sqlalchemy.orm import Session
 
 router = APIRouter(
@@ -17,8 +19,19 @@ UPLOAD_DIR = Path("uploads")
 UPLOAD_DIR.mkdir(exist_ok=True)
 
 
+@router.get("/")
+def list_documents(
+    db: Session = Depends(get_db),
+):
+    documents = db.query(Document).all()
+    
+
+    return documents
+
+
 @router.post("/upload")
 async def upload_document(
+    background_tasks: BackgroundTasks,
     file: UploadFile = File(...),
     db: Session = Depends(get_db),
 ):
@@ -36,24 +49,35 @@ async def upload_document(
     )
 
     db.add(document)
-    db.flush()
-
-    text = PDFService.extract_text(file_path)
-    chunks = ChunkingService.chunk_text(text)
-
-    for chunk_content in chunks:
-        chunk = Chunk(document_id=document.id, content=chunk_content)
-        db.add(chunk)
-
-    document.status = DocumentStatus.INDEXED
-    
     db.commit()
+
+    background_tasks.add_task(
+        DocumentProcessingService.process_document, document.id, str(file_path)
+    )
 
     return {
         "id": document.id,
         "filename": document.name,
         "size": document.file_size,
-        "chunk_count": len(chunks),
+        "status": document.status,
+    }
+
+
+@router.get("/{document_id}")
+def get_document(
+    document_id: int,
+    db: Session = Depends(get_db),
+):
+    document = db.get(
+        Document,
+        document_id,
+    )
+
+    return {
+        "id": document.id,
+        "filename": document.name,
+        "size": document.file_size,
+        "status": document.status,
     }
 
 
