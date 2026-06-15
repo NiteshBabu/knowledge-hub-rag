@@ -1,7 +1,7 @@
 from app.api.dependencies import get_db
 from app.api.document_routes import router as document_router
-from app.core import settings
 from app.core.limiter import limiter
+from app.core.settings import settings
 from app.db.base import Base
 from app.db.database import engine
 from app.schemas.chat import ChatRequest
@@ -29,7 +29,7 @@ app.add_exception_handler(
 app.add_middleware(
     CORSMiddleware,
     allow_origins=[
-        "http://localhost:3000",
+        origin.strip() for origin in settings.cors_origins.split(",") if origin.strip()
     ],
     allow_credentials=True,
     allow_methods=["*"],
