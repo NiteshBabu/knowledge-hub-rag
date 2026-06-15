@@ -3,6 +3,7 @@ from pathlib import Path
 
 from app.api.dependencies import get_db
 from app.core.limiter import limiter
+from app.core.settings import settings
 from app.models.chunk import Chunk
 from app.models.document import Document, DocumentStatus
 from app.services.chunking import ChunkingService
@@ -28,7 +29,8 @@ def list_documents(
     request: Request,
     db: Session = Depends(get_db),
 ):
-    documents = (
+    print("Hello")
+    return (
         db.query(Document)
         .filter(
             Document.session_id == request.headers.get("X-Session-Id"),
@@ -36,11 +38,14 @@ def list_documents(
         )
         .all()
     )
-    return documents
 
 
 @router.post("/upload")
-@limiter.limit("5/hour")
+@limiter.limit(
+    "3/hour",
+    error_message="Slow down, only 5 docs per hour!",
+    exempt_when=lambda: settings.debug,
+)
 async def upload_document(
     background_tasks: BackgroundTasks,
     request: Request,
@@ -48,6 +53,8 @@ async def upload_document(
     db: Session = Depends(get_db),
 ):
 
+    if file.content_type != "application/pdf":
+        raise HTTPException(400, "Only PDF files are allowed")
     if file.size > MAX_FILE_SIZE:
         raise HTTPException(
             413, "File size is large, please use file size less than 3MB"
@@ -99,11 +106,3 @@ def get_document(
         "size": document.file_size,
         "status": document.status,
     }
-
-
-@router.get("/text")
-def get_text():
-    text = PDFService.extract_text("uploads/demo.pdf")
-
-    chunks = ChunkingService.chunk_text(text)
-    return chunks

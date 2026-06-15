@@ -19,7 +19,6 @@ pymupdf
 # use gemini embedding to reduce memory usage on deployment
 google-genai
 
-httpx
 slowapi
 
 python-dotenv

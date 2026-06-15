@@ -1,3 +1,5 @@
+import os
+
 from app.db.database import SessionLocal
 from app.models.chunk import Chunk
 from app.models.document import Document, DocumentStatus
@@ -45,6 +47,7 @@ class DocumentProcessingService:
             document.status = DocumentStatus.INDEXED
 
             db.commit()
+            os.remove(file_path)
 
         except Exception:
 

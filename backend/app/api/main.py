@@ -1,5 +1,6 @@
 from app.api.dependencies import get_db
 from app.api.document_routes import router as document_router
+from app.core import settings
 from app.core.limiter import limiter
 from app.db.base import Base
 from app.db.database import engine
@@ -61,7 +62,10 @@ def search(q: str, db: Session = Depends(get_db)):
 
 
 @app.post("/chat")
-@limiter.limit("10/minute")
+@limiter.limit(
+    "10/minute",
+    exempt_when=lambda: settings.debug,
+)
 def chat(
     request: Request,
     body: ChatRequest,
