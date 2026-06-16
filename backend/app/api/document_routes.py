@@ -29,7 +29,6 @@ def list_documents(
     request: Request,
     db: Session = Depends(get_db),
 ):
-    print("Hello")
     return (
         db.query(Document)
         .filter(
@@ -42,8 +41,8 @@ def list_documents(
 
 @router.post("/upload")
 @limiter.limit(
-    "3/hour",
-    error_message="Slow down, only 5 docs per hour!",
+    "3/day",
+    error_message="Slow down, only 3 docs per day!",
     exempt_when=lambda: settings.debug,
 )
 async def upload_document(

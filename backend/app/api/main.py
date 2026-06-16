@@ -63,7 +63,8 @@ def search(q: str, db: Session = Depends(get_db)):
 
 @app.post("/chat")
 @limiter.limit(
-    "10/minute",
+    "5/hour",
+    error_message="Slow down, only 5 messages/hour",
     exempt_when=lambda: settings.debug,
 )
 def chat(
@@ -81,11 +82,11 @@ def chat(
 app.include_router(document_router)
 
 
-@app.get("/test-groq")
-def test_groq():
+# @app.get("/test-groq")
+# def test_groq():
 
-    llm = get_llm()
+#     llm = get_llm()
 
-    response = llm.generate("Reply with OK")
+#     response = llm.generate("Reply with OK")
 
-    return {"response": response}
+#     return {"response": response}

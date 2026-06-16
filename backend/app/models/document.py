@@ -34,7 +34,7 @@ class Document(Base):
         default=datetime.utcnow,
     )
     expires_at: Mapped[datetime] = mapped_column(
-        DateTime, default=lambda: datetime.utcnow() + timedelta(minutes=1)
+        DateTime, default=lambda: datetime.utcnow() + timedelta(days=1)
     )
     chunks = relationship(
         "Chunk", back_populates="document", cascade="all, delete-orphan"
