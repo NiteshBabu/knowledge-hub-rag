@@ -1,0 +1,39 @@
+@import 'tailwindcss';
+
+@layer base {
+	:root {
+		@apply text-[rgba(255,255,255,0.87)] bg-[#242424] font-sans;
+	}
+
+	body {
+		@apply grid place-items-center min-w-[320px] min-h-screen relative m-0;
+	}
+	
+	::-webkit-scrollbar {
+		width: 6px;
+	}
+
+	::-webkit-scrollbar-track {
+		background: transparent;
+	}
+
+	::-webkit-scrollbar-thumb {
+		background: rgba(255, 255, 255, 0.2);
+		border-radius: 999px;
+	}
+
+	::-webkit-scrollbar-thumb:hover {
+		background: rgba(255, 255, 255, 0.35);
+		cursor: pointer;
+	}
+
+	@keyframes coldBootProgress {
+		from {
+			width: 0%;
+		}
+
+		to {
+			width: 100%;
+		}
+	}
+}
