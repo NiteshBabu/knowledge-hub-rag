@@ -28,3 +28,5 @@ alembic
 openai
 
 redis
+
+celery[redis]

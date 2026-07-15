@@ -4,12 +4,8 @@ from pathlib import Path
 from app.api.dependencies import get_db
 from app.core.limiter import limiter
 from app.core.settings import settings
-from app.models.chunk import Chunk
 from app.models.document import Document, DocumentStatus
-from app.services.chunking import ChunkingService
-from app.services.document_processing import DocumentProcessingService
-from app.services.embedding import EmbeddingService
-from app.services.pdf import PDFService
+from app.tasks.documents import process_document_task
 from fastapi import (APIRouter, BackgroundTasks, Depends, File, HTTPException,
                      Request, UploadFile)
 from sqlalchemy.orm import Session
@@ -77,9 +73,8 @@ async def upload_document(
     db.query(Document).filter(Document.expires_at < datetime.utcnow()).delete()
     db.commit()
 
-    background_tasks.add_task(
-        DocumentProcessingService.process_document, document.id, str(file_path)
-    )
+    process_document_task.delay(document.id, str(file_path))
+    # background_tasks.add_task(process_document_task, document.id, str(file_path))
 
     return {
         "id": document.id,
