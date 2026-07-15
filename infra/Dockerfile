@@ -6,6 +6,7 @@ COPY backend/ .
 
 RUN pip install -r requirements.txt
 
+RUN chmod +x start.sh
 
 # CMD ["celery", "-A", "app.core.celery:celery_app", "worker", "--loglevel=info"]
 
