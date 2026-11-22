@@ -13,7 +13,7 @@ class GroqProvider(LLMProvider):
 
     def generate(self, prompt: str) -> str:
         response = self.client.chat.completions.create(
-            model="llama-3.3-70b-versatile",
+            model="qwen/qwen3.8-27b",
             messages=[
                 {
                     "role": "user",
@@ -22,6 +22,5 @@ class GroqProvider(LLMProvider):
             ],
             temperature=0,
         )
-        
 
         return response.choices[0].message.content

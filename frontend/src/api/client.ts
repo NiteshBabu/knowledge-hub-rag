@@ -2,7 +2,7 @@ import { getSessionId } from "@/lib/utils";
 import axios from "axios";
 
 export const api = axios.create({
-  baseURL: process.env.NODE_ENV != "production" ? "http://localhost:8000" : "https://knowledge-hub-rag.onrender.com/",
+  baseURL: process.env.NODE_ENV != "production" ? "http://localhost:8000" : "https://knowledge-hub-rag-docker-demo.onrender.com/",
 });
 
 api.interceptors.request.use(
