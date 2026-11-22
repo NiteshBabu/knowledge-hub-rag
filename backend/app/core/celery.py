@@ -7,6 +7,10 @@ celery_app = Celery(
     "knowledgehub",
     broker=settings.redis_url,
     backend=settings.redis_url,
+    worker_concurrency=1,
+    worker_prefetch_multiplier=1,
+    task_acks_late=True,
+    task_ignore_result=True,
     include=["app.tasks.documents"],
 )
 
